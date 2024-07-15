@@ -8,7 +8,6 @@ import enigma.todo.repository.TodoRepository;
 import enigma.todo.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,8 +18,7 @@ public class TodoServiceImpl implements TodoService {
     private final TodoRepository todoRepository;
 
     @Override
-    public Todo create(TodoDTO todoDTO) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public Todo create(Authentication auth, TodoDTO todoDTO) {
         User user = (User) auth.getPrincipal();
 
         return todoRepository.save(Todo.builder()
@@ -31,16 +29,14 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public List<Todo> findAll() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public List<Todo> findAll(Authentication auth) {
         User user = (User) auth.getPrincipal();
 
         return todoRepository.findByUser(user);
     }
 
     @Override
-    public Todo findById(Long id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public Todo findById(Authentication auth, Long id) {
         User user = (User) auth.getPrincipal();
 
         return todoRepository.findByUserAndId(user, id)
@@ -48,15 +44,15 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public Todo updateById(Long id, TodoDTO todoDTO) {
-        Todo foundTodo = findById(id);
+    public Todo updateById(Authentication auth, Long id, TodoDTO todoDTO) {
+        Todo foundTodo = findById(auth, id);
         foundTodo.setTitle(todoDTO.getTitle());
         return todoRepository.save(foundTodo);
     }
 
     @Override
-    public void deleteById(Long id) {
-        Todo foundTodo = findById(id);
+    public void deleteById(Authentication auth, Long id) {
+        Todo foundTodo = findById(auth, id);
         todoRepository.delete(foundTodo);
     }
 }
