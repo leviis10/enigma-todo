@@ -3,7 +3,9 @@ package enigma.todo.controller.api;
 import enigma.todo.dto.TodoDTO;
 import enigma.todo.dto.response.Response;
 import enigma.todo.dto.response.SuccessResponse;
+import enigma.todo.dto.response.TodoDetailUpdateContentDTO;
 import enigma.todo.model.Todo;
+import enigma.todo.service.TodoDetailService;
 import enigma.todo.service.TodoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TodoController {
     private final TodoService todoService;
+    private final TodoDetailService todoDetailService;
 
     @PostMapping
     public ResponseEntity<SuccessResponse<Todo>> create(
@@ -47,6 +50,15 @@ public class TodoController {
         return Response.success(todoService.findById(auth, id));
     }
 
+    @GetMapping("/{todoId}/todo-details/{todoDetailId}")
+    public ResponseEntity<?> findTodoDetailById(
+            Authentication auth,
+            @PathVariable Long todoId,
+            @PathVariable Long todoDetailId
+    ) {
+        return Response.success(todoDetailService.findById(auth, todoId, todoDetailId));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateById(
             Authentication auth,
@@ -58,6 +70,18 @@ public class TodoController {
         );
     }
 
+    @PatchMapping("/{todoId}/todo-details/{todoDetailId}")
+    public ResponseEntity<?> updateTodoDetailById(
+            Authentication auth,
+            @PathVariable Long todoId,
+            @PathVariable Long todoDetailId,
+            @Valid @RequestBody TodoDetailUpdateContentDTO todoDetailUpdateContentDTO
+    ) {
+        return Response.success(
+                todoDetailService.updateById(auth, todoId, todoDetailId, todoDetailUpdateContentDTO)
+        );
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessResponse<String>> deleteById(
             Authentication auth,
@@ -66,6 +90,18 @@ public class TodoController {
         todoService.deleteById(auth, id);
         return Response.success(
                 "Todo deleted successfully"
+        );
+    }
+
+    @DeleteMapping("/{todoId}/todo-details/{todoDetailId}")
+    public ResponseEntity<SuccessResponse<String>> deleteTodoDetailById(
+            Authentication auth,
+            @PathVariable Long todoId,
+            @PathVariable Long todoDetailId
+    ) {
+        todoDetailService.deleteById(auth, todoId, todoDetailId);
+        return Response.success(
+                "Todo Detail deleted successfully"
         );
     }
 }

@@ -4,6 +4,8 @@ demo todo application
 
 ## Nice to have
 
-- Todo detail (CRUD)
+- error handling
+- convert response to become DTO (reduce eager fetching)
+- reorganize file and folder
 - RBAC
 - Categories

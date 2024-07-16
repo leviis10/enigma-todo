@@ -1,17 +1,16 @@
 package enigma.todo.service;
 
+import enigma.todo.dto.TodoDetailDTO;
+import enigma.todo.dto.response.TodoDetailUpdateContentDTO;
 import enigma.todo.model.TodoDetail;
-
-import java.util.List;
+import org.springframework.security.core.Authentication;
 
 public interface TodoDetailService {
-    TodoDetail create(TodoDetail newTodo);
+    TodoDetail create(Authentication auth, TodoDetailDTO todoDetailDTO);
 
-    List<TodoDetail> findAll();
+    TodoDetail findById(Authentication auth, Long todoId, Long todoDetailId);
 
-    TodoDetail findById(Long id);
+    TodoDetail updateById(Authentication auth, Long todoId, Long todoDetailId, TodoDetailUpdateContentDTO todoDetailUpdateContentDTO);
 
-    TodoDetail updateById(Long id, TodoDetail updatedTodo);
-
-    void deleteById(Long id);
+    void deleteById(Authentication auth, Long todoId, Long todoDetailId);
 }
