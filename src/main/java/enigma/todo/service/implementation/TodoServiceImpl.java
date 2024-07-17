@@ -31,7 +31,6 @@ public class TodoServiceImpl implements TodoService {
     @Override
     public List<Todo> findAll(Authentication auth) {
         User user = (User) auth.getPrincipal();
-
         return todoRepository.findByUser(user);
     }
 
