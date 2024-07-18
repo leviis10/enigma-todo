@@ -1,6 +1,7 @@
 package enigma.todo.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import enigma.todo.model.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -34,4 +37,7 @@ public class RegisterDTO {
     )
     @NotNull(message = "Password cannot be null")
     private String password;
+
+    @NotNull
+    private List<UserRole> roles;
 }

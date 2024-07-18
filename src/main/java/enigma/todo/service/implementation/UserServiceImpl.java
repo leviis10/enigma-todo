@@ -1,9 +1,11 @@
 package enigma.todo.service.implementation;
 
 import enigma.todo.dto.RegisterDTO;
+import enigma.todo.model.Role;
 import enigma.todo.model.User;
 import enigma.todo.repository.UserRepository;
 import enigma.todo.security.JwtUtils;
+import enigma.todo.service.RoleService;
 import enigma.todo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,16 +23,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
     @Override
     public Map<String, String> register(RegisterDTO registerDTO) {
+        List<Role> roles = roleService.findByNameIn(registerDTO.getRoles());
+
         userRepository.save(User.builder()
                 .username(registerDTO.getUsername())
                 .email(registerDTO.getEmail())
                 .password(passwordEncoder.encode(registerDTO.getPassword()))
+                .roles(roles)
                 .build()
         );
 
