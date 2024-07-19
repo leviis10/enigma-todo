@@ -19,10 +19,8 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public Todo create(Authentication auth, TodoDTO todoDTO) {
-        User user = (User) auth.getPrincipal();
-
         return todoRepository.save(Todo.builder()
-                .user(user)
+                .user(getUser(auth))
                 .title(todoDTO.getTitle())
                 .build()
         );
@@ -30,15 +28,17 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public List<Todo> findAll(Authentication auth) {
-        User user = (User) auth.getPrincipal();
-        return todoRepository.findByUser(user);
+        return todoRepository.findByUser(getUser(auth));
+    }
+
+    @Override
+    public List<Todo> findByIdIn(Authentication auth, List<Long> ids) {
+        return todoRepository.findByUserAndIdIn(getUser(auth), ids);
     }
 
     @Override
     public Todo findById(Authentication auth, Long id) {
-        User user = (User) auth.getPrincipal();
-
-        return todoRepository.findByUserAndId(user, id)
+        return todoRepository.findByUserAndId(getUser(auth), id)
                 .orElseThrow(() -> new NotFoundException("Todo not found"));
     }
 
@@ -53,5 +53,9 @@ public class TodoServiceImpl implements TodoService {
     public void deleteById(Authentication auth, Long id) {
         Todo foundTodo = findById(auth, id);
         todoRepository.delete(foundTodo);
+    }
+
+    private User getUser(Authentication auth) {
+        return (User) auth.getPrincipal();
     }
 }

@@ -11,6 +11,8 @@ public interface TodoService {
 
     List<Todo> findAll(Authentication auth);
 
+    List<Todo> findByIdIn(Authentication auth, List<Long> ids);
+
     Todo findById(Authentication auth, Long id);
 
     Todo updateById(Authentication auth, Long id, TodoDTO todoDTO);

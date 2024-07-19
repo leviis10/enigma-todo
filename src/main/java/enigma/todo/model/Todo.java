@@ -45,4 +45,8 @@ public class Todo {
     @OneToMany(mappedBy = "todo", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<TodoDetail> details;
+
+    @ManyToMany(mappedBy = "todos")
+    @JsonIgnore
+    private List<Category> categories;
 }
