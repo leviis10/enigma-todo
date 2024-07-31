@@ -6,3 +6,4 @@ demo todo application
 
 - convert response to become DTO (reduce eager fetching)
 - reorganize file and folder
+- add pagination
